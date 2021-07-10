@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class LanguageResponse(BaseModel):
@@ -62,3 +62,17 @@ class CodeResponseWithAlgorithms(CodeResponse):
 
     class Config:
         orm_mode = True
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class ChangePassword(BaseModel):
+    old_pass: str
+    new_pass: str

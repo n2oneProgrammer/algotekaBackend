@@ -3,7 +3,8 @@ from starlette.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, engine
-from .router import router_code,router_language,router_algorithm
+from .router import router_code, router_language, router_algorithm, router_auth
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Algoteka", description="", version="0.0.1")
@@ -16,10 +17,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(router_code)
 app.include_router(router_language)
 app.include_router(router_algorithm)
+app.include_router(router_auth)
+
 
 @app.get("/")
 async def root():

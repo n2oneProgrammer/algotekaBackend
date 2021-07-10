@@ -1,5 +1,11 @@
 from sqlalchemy.orm import Session
 from app import models, schema
+from .dependencies import encrypt_sha256_with_salt
+
+from sqlalchemy import and_
+
+from .models import User
+from .schema import ChangePassword
 
 
 def get_algorithms(db: Session, skip: int = 0, limit: int = 100):
@@ -61,3 +67,33 @@ async def create_code(db: Session, data: schema.CodeCreate):
     db.commit()
     db.refresh(db_code)
     return db_code
+
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.login == email).first()
+
+
+def login_user(db, username: str, password: str):
+    hashed_password = encrypt_sha256_with_salt(password)
+    return (
+        db.query(models.User).filter(
+            and_(
+                models.User.password == hashed_password,
+                models.User.login == username,
+            )
+        ).first()
+    )
+
+
+def change_password(db: Session, current_user: User, change_password: ChangePassword):
+    old_pass = encrypt_sha256_with_salt(change_password.old_pass)
+    new_pass = encrypt_sha256_with_salt(change_password.new_pass)
+
+    if current_user.password != old_pass:
+        return None
+
+    current_user.password = new_pass
+    db.commit()
+    db.refresh(current_user)
+    print(current_user)
+    return current_user
