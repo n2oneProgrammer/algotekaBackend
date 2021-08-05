@@ -3,6 +3,7 @@ from typing import List, Optional
 
 
 class LanguageResponse(BaseModel):
+    id: int
     name: str
     syntax_code: str
 
