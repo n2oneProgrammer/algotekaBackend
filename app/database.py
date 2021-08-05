@@ -10,7 +10,7 @@ if server is None:
 else:
     username = os.getenv("usernameDB")
     password = os.getenv("passwordDB")
-    SQLALCHEMY_DATABASE_URL = "postgresql://%s:%s@%s" % (username, password, server)
+    SQLALCHEMY_DATABASE_URL = server
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
