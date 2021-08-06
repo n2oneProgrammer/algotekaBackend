@@ -8,12 +8,10 @@ server = os.getenv("serverDB")
 if server is None:
     SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 else:
-    username = os.getenv("usernameDB")
-    password = os.getenv("passwordDB")
     SQLALCHEMY_DATABASE_URL = server
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
